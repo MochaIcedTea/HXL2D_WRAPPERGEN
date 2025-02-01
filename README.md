@@ -6,6 +6,8 @@ its just slightly edited to work on my machine, plus its now setup to straight o
 # IF YOU JUST WANT THE EXTERNS.  
 go to https://github.com/MochaIcedTea/HX_L2D, i've premade them and uploaded them 4 you!  
 
+# TODO:
+fix the weirdness that is the init function. i think i'll most likely make a manually written wrapper library for this (or i might honestly do some fuckery!)  
 
 # THE ORIGNAL PROJECTS README!
 This project uses the awesome [love-api][] project, which provides a lua tables representation of the love documention, to generate Haxe wrappers.  
