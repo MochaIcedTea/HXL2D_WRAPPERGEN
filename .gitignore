@@ -2,4 +2,4 @@ love/*
 .*.swp
 
 HAXEOUT/*
-#love-api/*
+love-api/*
