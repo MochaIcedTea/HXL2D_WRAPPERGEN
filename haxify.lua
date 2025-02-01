@@ -341,13 +341,13 @@ if realylDOFullThing then
         print(drnam)
         if drnam ~= outPath .. "/" then
 			os.execute("mkdir " .. drnam:gsub("/", "\\"))
-			print("\"\" > " .. outPath:gsub("/", "\\") .. "\\" .. i:gsub("/", "\\"))
+			--print("\"\" > " .. outPath:gsub("/", "\\") .. "\\" .. i:gsub("/", "\\"))
             local f = io.open(outPath:gsub("/", "\\") .. "\\" .. i:gsub("/", "\\"), "w")
             if f then
                 f:write(v)
                 f:close()
             else
-                print("Failed to open file: " .. "HAXEOUT\\" .. i:gsub("/", "\\"))
+                print("Failed to open file: " .. outPath:gsub("/", "\\") .. "\\" .. i:gsub("/", "\\"))
             end
         end
     end
@@ -378,6 +378,6 @@ local haxelibStuffsDir = scandir("./haxelibstuffs")
 
 for i = 1, #haxelibStuffsDir do
 	local file = haxelibStuffsDir[i]
-	os.execute("copy " .. file .. " " .. outFirstFolder .. "\\" .. file)
-	--print(thg[i])
+	os.execute("copy haxelibstuffs\\" .. file .. " " .. outFirstFolder .. "\\" .. file)
+	print(haxelibStuffsDir[i])
 end
