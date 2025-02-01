@@ -376,8 +376,27 @@ end
 
 local haxelibStuffsDir = scandir("./haxelibstuffs")
 
+local function copyRecursive(src, dest)
+    os.execute('mkdir "' .. dest .. '"') -- Create the destination directory
+    local pfile = io.popen('dir "' .. src .. '" /b /a')
+    for file in pfile:lines() do
+        local srcPath = src .. "\\" .. file
+        local destPath = dest .. "\\" .. file
+        if file:sub(-1) == "." or file:sub(-1) == ".." then
+            -- Skip "." and ".." directories
+        elseif os.execute('cd "' .. srcPath .. '"') == 0 then
+            -- It's a directory, recurse
+            copyRecursive(srcPath, destPath)
+        else
+            -- It's a file, copy it
+            os.execute('copy "' .. srcPath .. '" "' .. destPath .. '"')
+        end
+    end
+    pfile:close()
+end
+
 for i = 1, #haxelibStuffsDir do
-	local file = haxelibStuffsDir[i]
-	os.execute("copy haxelibstuffs\\" .. file .. " " .. outFirstFolder .. "\\" .. file)
-	print(haxelibStuffsDir[i])
+    local file = haxelibStuffsDir[i]
+    copyRecursive("haxelibstuffs\\" .. file, outFirstFolder .. "\\" .. file)
+    print(haxelibStuffsDir[i])
 end
