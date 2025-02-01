@@ -327,12 +327,15 @@ end
 
 mergeTables(files, emitModule(api, "love"))
 
-os.execute("mkdir " .. "HAXEOUT")
+local outPath = "EXTERNS\\src"
+local outFirstFolder = "EXTERNS"
+
+os.execute("mkdir " .. outPath)
 
 for i, v in pairs(files) do
-	local drnam = "HAXEOUT/" .. dirname(i)
+	local drnam = outPath .."/" .. dirname(i)
 	print(drnam)
-	if drnam ~= "HAXEOUT/" then
+	if drnam ~= outPath .. "/" then
 		os.execute("mkdir " .. drnam:gsub("/", "\\"))
 		local f = io.open("HAXEOUT\\" .. i, "w")
 		if f then

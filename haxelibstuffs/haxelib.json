@@ -1,0 +1,13 @@
+{
+    "name": "HXL2D_WRAPPERGEN",
+    "url" : "https://github.com/jasononeil/useless/",
+    "license": "MIT",
+    "tags": ["cross", "lua"],
+    "description": "This libary works to make haxe externs for love2d!",
+    "version": "1.0.0",
+    "classPath": "src/",
+    "releasenote": "Initial release, everything is working correctly.",
+    "contributors": ["MochaIcedTea"],
+    "dependencies": {
+    }
+}
