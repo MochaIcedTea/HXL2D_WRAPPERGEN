@@ -340,12 +340,8 @@ if realylDOFullThing then
         local drnam = outPath .. "/" .. dirname(i)
         print(drnam)
         if drnam ~= outPath .. "/" then
-            --drnam = drnam:gsub("/", "\\") -- Ensure consistent path separators for Windows
 			os.execute("mkdir " .. drnam:gsub("/", "\\"))
 			print("\"\" > " .. outPath:gsub("/", "\\") .. "\\" .. i:gsub("/", "\\"))
-			--os.execute("\"\" > " .. outPath:gsub("/", "\\") .. "\\" .. i:gsub("/", "\\"))
-            --os.execute('mkdir "' .. drnam .. '"') -- Wrap in quotes to handle spaces in paths
-            --os.execute("copy /b NUL " .. "HAXEOUT\\" .. i)
             local f = io.open(outPath:gsub("/", "\\") .. "\\" .. i:gsub("/", "\\"), "w")
             if f then
                 f:write(v)
