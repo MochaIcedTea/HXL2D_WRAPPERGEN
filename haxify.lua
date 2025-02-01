@@ -116,13 +116,21 @@ do
 		Variant = "Dynamic",
 
 		-- FIXME
+		cdata = "CompressedData",
 		["ShaderVariableType"] = "String",
 		["KeyConstant"] = "String",
 		["Scancode"] = "String",
 	}
 	
 	function typeMap(t)
-		return map[t] or t
+		local thgn = ""
+		if map[t] then
+			thgn =  map[t]
+		else
+			thgn = t
+		end
+		thgn = thgn:gsub("or string", "")
+		return thgn
 	end
 end
 
@@ -151,7 +159,9 @@ function emitMultiReturnType(name, returns, types)
 			local type = typeMap(v.type)
 			types[type] = true
 
-			table.insert(parts, ("\tvar %s : %s;\n"):format(v.name, type))
+			--table.insert(parts, ("\tvar %s : %s;\n"):format(v.name, type))
+			--genuinly no idea whats causing it. fuck off.
+			table.insert(parts, "\tvar " .. v.name .. " : " .. type .. ";\n")
 		end
 	end
 	table.insert(parts, "}")
