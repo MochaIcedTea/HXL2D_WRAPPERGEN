@@ -374,29 +374,43 @@ function scandir(directory)
 end
 
 
-local haxelibStuffsDir = scandir("./haxelibstuffs")
+--local haxelibStuffsDir = scandir("./haxelibstuffs")
 
-local function copyRecursive(src, dest)
-    os.execute('mkdir "' .. dest .. '"') -- Create the destination directory
-    local pfile = io.popen('dir "' .. src .. '" /b /a')
-    for file in pfile:lines() do
-        local srcPath = src .. "\\" .. file
-        local destPath = dest .. "\\" .. file
-        if file:sub(-1) == "." or file:sub(-1) == ".." then
-            -- Skip "." and ".." directories
-        elseif os.execute('cd "' .. srcPath .. '"') == 0 then
-            -- It's a directory, recurse
-            copyRecursive(srcPath, destPath)
-        else
-            -- It's a file, copy it
-            os.execute('copy "' .. srcPath .. '" "' .. destPath .. '"')
-        end
-    end
-    pfile:close()
+local function copyDirectory(dir)
+
 end
 
-for i = 1, #haxelibStuffsDir do
-    local file = haxelibStuffsDir[i]
-    copyRecursive("haxelibstuffs\\" .. file, outFirstFolder .. "\\" .. file)
-    print(haxelibStuffsDir[i])
+function is_dir(path)
+    local f = io.open(path:gsub("/", "\\"), "r")
+	if not f then return true end
+    return not f:read(0) and f:seek("end") ~= 0
 end
+
+copyDirectory = function(dir)
+	local direct = scandir("./" .. dir)
+	for i = 1, #direct do 
+		local file = direct[i]
+		print("THINGTHING")
+		print(dir .. "\\" .. file)
+		if is_dir(dir .. "\\" .. file) then
+			print(outFirstFolder .. "\\" .. file)
+			print("UUUGH")
+			print(outFirstFolder .. "\\" .. dir)
+			os.execute("mkdir " .. outFirstFolder .. "\\" .. dir:gsub("haxelibstuffs", "") .. "\\" .. file)
+			print(dir .. "\\" .. file)
+			copyDirectory(dir .. "\\" .. file)
+		else
+			print(dir:gsub("haxelibstuffs", "") .."\\" .. file)
+			os.execute("copy " .. dir .. "\\" .. file .. " " .. outFirstFolder .. "\\" .. dir:gsub("haxelibstuffs", "") .."\\" .. file)
+		end
+		--print(direct[i]) 
+	end
+end
+
+copyDirectory("haxelibstuffs")
+
+--[[for i = 1, #haxelibStuffsDir do 
+	local file = haxelibStuffsDir[i] 
+	os.execute("copy haxelibstuffs\\" .. file .. " " .. outFirstFolder .. "\\" .. file) 
+	print(haxelibStuffsDir[i]) 
+end]]
