@@ -250,7 +250,7 @@ end
 function emitEnum(e, packageName)
 	local out = {}
 	table.insert(out, ("package %s;"):format(packageName))
-	table.insert(out, "@:enum")
+	table.insert(out, "enum")
 	table.insert(out, ("abstract %s (String)\n{"):format(e.name))
 
 	for i, v in ipairs(e.constants) do
