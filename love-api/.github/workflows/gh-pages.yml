@@ -1,0 +1,73 @@
+name: Deploy
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        lua: ["5.1.5", "5.2.4", "5.3.5", "5.4.6", "luajit"]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Setup Lua (not LuaJIT)
+      uses: leafo/gh-actions-lua@v10
+      if: matrix.lua != 'luajit'
+      with:
+        luaVersion: ${{ matrix.lua }}
+    # leafo/gh-actions-lua does not use latest LuaJIT, so do it ourself.
+    - name: Checkout Latest LuaJIT
+      if: matrix.lua == 'luajit'
+      uses: actions/checkout@v4
+      with:
+        repository: LuaJIT/LuaJIT
+        path: .lua-build
+    - name: Compile LuaJIT
+      if: matrix.lua == 'luajit'
+      working-directory: .lua-build
+      run: make -j$(nproc) install PREFIX=$GITHUB_WORKSPACE/.lua
+    - name: Symlink LuaJIT
+      if: matrix.lua == 'luajit'
+      working-directory: .lua/bin
+      run: ln -s luajit lua
+    - name: List All Files in .lua
+      run: find .lua -name '*'
+    - name: Test Lua Interpreter
+      run: .lua/bin/lua -v
+    - name: Setup LuaRocks
+      uses: leafo/gh-actions-luarocks@v4
+    - name: Install Busted
+      run: luarocks install busted
+    - name: Run Tests
+      run: busted specs
+  gh-pages:
+    name: Commit to gh-pages Branch
+    needs: test
+    if: github.event_name == 'push' && github.ref_name == 'master'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Get LuaJIT
+      run: sudo apt-get install -y luajit curl
+    - name: Checkout gh-pages
+      uses: actions/checkout@v4
+      with:
+        ref: gh-pages
+        fetch-depth: 0
+    - name: Checkout Inside
+      uses: actions/checkout@v4
+      with:
+        path: generator/api
+    - name: Generate Page
+      run: cd generator && luajit html-generator.lua
+    - name: Move Index
+      run: mv -f generator/index.html index.html
+    - name: Generate JSON
+      run: cd generator && luajit json-generator.lua
+    - name: Add and Commit
+      uses: EndBug/add-and-commit@v9
+      with:
+        add: index.html love-api.json
+        default_author: github_actions
+        message: 'Build ${{ github.sha }}'
+        push: true
