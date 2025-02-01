@@ -327,20 +327,61 @@ end
 
 mergeTables(files, emitModule(api, "love"))
 
-local outPath = "EXTERNS\\src"
+local realylDOFullThing = true
+
+local outPath = "EXTERNS/src"
 local outFirstFolder = "EXTERNS"
 
 os.execute("mkdir " .. outPath)
 
-for i, v in pairs(files) do
-	local drnam = outPath .."/" .. dirname(i)
-	print(drnam)
-	if drnam ~= outPath .. "/" then
-		os.execute("mkdir " .. drnam:gsub("/", "\\"))
-		local f = io.open("HAXEOUT\\" .. i, "w")
-		if f then
-			f:write(v)
-			f:close()
-		end
-	end
+if realylDOFullThing then
+
+	for i, v in pairs(files) do
+        local drnam = outPath .. "/" .. dirname(i)
+        print(drnam)
+        if drnam ~= outPath .. "/" then
+            --drnam = drnam:gsub("/", "\\") -- Ensure consistent path separators for Windows
+			os.execute("mkdir " .. drnam:gsub("/", "\\"))
+			print("\"\" > " .. outPath:gsub("/", "\\") .. "\\" .. i:gsub("/", "\\"))
+			--os.execute("\"\" > " .. outPath:gsub("/", "\\") .. "\\" .. i:gsub("/", "\\"))
+            --os.execute('mkdir "' .. drnam .. '"') -- Wrap in quotes to handle spaces in paths
+            --os.execute("copy /b NUL " .. "HAXEOUT\\" .. i)
+            local f = io.open(outPath:gsub("/", "\\") .. "\\" .. i:gsub("/", "\\"), "w")
+            if f then
+                f:write(v)
+                f:close()
+            else
+                print("Failed to open file: " .. "HAXEOUT\\" .. i:gsub("/", "\\"))
+            end
+        end
+    end
+end
+
+--https://stackoverflow.com/questions/5303174/how-to-get-list-of-directories-in-lua
+--modified with chatgpt bc lazy shut up
+function scandir(directory)
+    local i, t, popen = 0, {}, io.popen
+    local pfile
+    if package.config:sub(1, 1) == '\\' then
+        -- Windows
+        pfile = popen('dir "'..directory..'" /b /a')
+    else
+        -- Unix-like systems (Linux, macOS)
+        pfile = popen('ls -a "'..directory..'"')
+    end
+    for filename in pfile:lines() do
+        i = i + 1
+        t[i] = filename
+    end
+    pfile:close()
+    return t
+end
+
+
+local haxelibStuffsDir = scandir("./haxelibstuffs")
+
+for i = 1, #haxelibStuffsDir do
+	local file = haxelibStuffsDir[i]
+	os.execute("copy " .. file .. " " .. outFirstFolder .. "\\" .. file)
+	--print(thg[i])
 end
