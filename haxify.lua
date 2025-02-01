@@ -129,7 +129,10 @@ do
 		else
 			thgn = t
 		end
-		thgn = thgn:gsub("or string", "")
+		--thgn = thgn:gsub("or string", "")
+		if thgn:find(" or ") then
+			thgn = "Dynamic"
+		end
 		return thgn
 	end
 end
