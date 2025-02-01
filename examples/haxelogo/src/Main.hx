@@ -5,8 +5,9 @@ import love.Love;
 import love.graphics.GraphicsModule;
 import love.graphics.GraphicsModule.GraphicsModuleGetDimensionsResult;
 import love.graphics.DrawMode;
+import love.LoveProgram;
 
-class Main {
+class Main extends LoveProgram {
 	var haxeLogo:Image;
 	var windowSize:GraphicsModuleGetDimensionsResult;
 
@@ -15,24 +16,21 @@ class Main {
 	}
 
 	public function new() {
-		haxeLogo = GraphicsModule.newImage("haxe-logo-vertical.png");
-		windowSize = GraphicsModule.getDimensions();
-		Love.load = init;
-		Love.draw = draw;
-		Love.update = update;
+		super();
 	}
 
 	// this stuff is WEIRD.
-	public function init(thing:Table<Dynamic, Dynamic>, thing2:Table<Dynamic, Dynamic>):Dynamic {
-		return null;
+	override public function load() {
+		windowSize = GraphicsModule.getDimensions();
+		haxeLogo = GraphicsModule.newImage("haxe-logo-vertical.png");
 	}
 
-	public function draw() {
+	override public function draw() {
 		GraphicsModule.clear(0, 0, 0);
 		var halfwindowX = (windowSize.width / 2) - (haxeLogo.getWidth() / 2);
 		var halfwindowY = (windowSize.height / 2) - (haxeLogo.getHeight() / 2);
 		GraphicsModule.draw(haxeLogo, halfwindowX, halfwindowY);
 	}
 
-	public function update(dt:Float) {}
+	override public function update(dt:Float) {}
 }

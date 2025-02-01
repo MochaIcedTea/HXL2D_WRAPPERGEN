@@ -183,6 +183,7 @@ local Class = _hx_e();
 local Enum = _hx_e();
 
 local Array = _hx_e()
+__love_LoveProgram = _hx_e()
 local Main = _hx_e()
 local Math = _hx_e()
 local String = _hx_e()
@@ -545,25 +546,47 @@ Array.prototype.resize = function(self,len)
   end;
 end
 
+__love_LoveProgram.new = function() 
+  local self = _hx_new(__love_LoveProgram.prototype)
+  __love_LoveProgram.super(self)
+  return self
+end
+__love_LoveProgram.super = function(self) 
+  love.load = _hx_bind(self,self.___load);
+  love.draw = _hx_bind(self,self.draw);
+  love.update = _hx_bind(self,self.update);
+end
+__love_LoveProgram.__name__ = true
+__love_LoveProgram.prototype = _hx_e();
+__love_LoveProgram.prototype.___load = function(self,args,unfilteredArgs) 
+  self.args = args;
+  self.unfilteredArgs = unfilteredArgs;
+  self:load();
+  do return nil end
+end
+__love_LoveProgram.prototype.load = function(self) 
+end
+__love_LoveProgram.prototype.update = function(self,dt) 
+end
+__love_LoveProgram.prototype.draw = function(self) 
+end
+
 Main.new = function() 
   local self = _hx_new(Main.prototype)
   Main.super(self)
   return self
 end
 Main.super = function(self) 
-  self.haxeLogo = love.graphics.newImage("haxe-logo-vertical.png");
-  self.windowSize = _hx_box_mr(_hx_table.pack(love.graphics.getDimensions()), {"width", "height"});
-  love.load = _hx_bind(self,self.init);
-  love.draw = _hx_bind(self,self.draw);
-  love.update = _hx_bind(self,self.update);
+  __love_LoveProgram.super(self);
 end
 Main.__name__ = true
 Main.main = function() 
   Main.new();
 end
 Main.prototype = _hx_e();
-Main.prototype.init = function(self,thing,thing2) 
-  do return nil end
+Main.prototype.load = function(self) 
+  self.windowSize = _hx_box_mr(_hx_table.pack(love.graphics.getDimensions()), {"width", "height"});
+  self.haxeLogo = love.graphics.newImage("haxe-logo-vertical.png");
 end
 Main.prototype.draw = function(self) 
   love.graphics.clear(0, 0, 0);
@@ -573,6 +596,8 @@ Main.prototype.draw = function(self)
 end
 Main.prototype.update = function(self,dt) 
 end
+Main.__super__ = __love_LoveProgram
+setmetatable(Main.prototype,{__index=__love_LoveProgram.prototype})
 
 Math.new = {}
 Math.__name__ = true
