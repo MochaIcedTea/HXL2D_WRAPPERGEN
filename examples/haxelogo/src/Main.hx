@@ -19,7 +19,6 @@ class Main extends LoveProgram {
 		super();
 	}
 
-	// this stuff is WEIRD.
 	override public function load() {
 		windowSize = GraphicsModule.getDimensions();
 		haxeLogo = GraphicsModule.newImage("haxe-logo-vertical.png");
