@@ -254,7 +254,12 @@ function emitEnum(e, packageName)
 	table.insert(out, ("abstract %s (String)\n{"):format(e.name))
 
 	for i, v in ipairs(e.constants) do
-		table.insert(out, ("\tvar %s = \"%s\";"):format(capitalize(v.name), v.name))
+		local nname = v.name
+		local nnamefirst = string.sub(nname, 1, 1)
+		if tonumber(nnamefirst) ~= nil then
+			nname = "_" .. nname 
+		end
+		table.insert(out, ("\tvar %s = \"%s\";"):format(capitalize(nname), v.name))
 	end
 
 	table.insert(out, "}")
