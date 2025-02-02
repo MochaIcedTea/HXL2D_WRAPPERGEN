@@ -9,6 +9,10 @@ go to https://github.com/MochaIcedTea/HX_L2D, i've premade them and uploaded the
 # EXAMPLES!
 examples can be found at https://github.com/MochaIcedTea/HXL2D_WRAPPERGEN/tree/main/examples  
 
+# TODO  
+some types equal nil, currently we just make nil = Dynamic. this NEEDS to be fixed.  
+
+
 # THE ORIGNAL PROJECTS README!
 This project uses the awesome [love-api][] project, which provides a lua tables representation of the love documention, to generate Haxe wrappers.  
 To use this project, make sure to checkout the submodule (`git submodule update --init love-api`).  

@@ -133,6 +133,9 @@ do
 		if thgn:find(" or ") then
 			thgn = "Dynamic"
 		end
+		if thgn == nil or thgn == "nil" then
+			thgn = "Dynamic"
+		end
 		return thgn
 	end
 end
