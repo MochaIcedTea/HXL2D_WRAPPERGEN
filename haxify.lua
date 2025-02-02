@@ -159,15 +159,36 @@ end
 function emitMultiReturnType(name, returns, types)
 	local parts = {}
 	parts[1] = ("\n@:multiReturn\nextern class %s\n{\n"):format(name)
+	local timesThingsHaveBeenIn = {}
+	for i, v in ipairs(returns) do
+		if v.name ~= "..." then
+			--local type = typeMap(v.type)
+			if not timesThingsHaveBeenIn[v.name] then
+				timesThingsHaveBeenIn[v.name] = 1
+			else
+				local thaaang = timesThingsHaveBeenIn[v.name]
+				v.name = v.name .. tostring(thaaang)
+				timesThingsHaveBeenIn[v.name] = thaaang + 1
+			end
+		end
+	end
 	for i, v in ipairs(returns) do
 		-- TODO: Maybe never? Vararg return can't really be modeled.
 		if v.name ~= "..." then
 			local type = typeMap(v.type)
 			types[type] = true
-
+			local thingsGoneThrough = {}
+			local bleh = ""
+			--if thingsGoneThrough[type] then
+			--	bleh = thingsGoneThrough[type]
+			--	thingsGoneThrough[type] = thingsGoneThrough[type] + 1
+			--end
 			--table.insert(parts, ("\tvar %s : %s;\n"):format(v.name, type))
 			--genuinly no idea whats causing it. fuck off.
-			table.insert(parts, "\tvar " .. v.name .. " : " .. type .. ";\n")
+			table.insert(parts, "\tvar " .. v.name .. bleh .. " : " .. type .. ";\n")
+			--if not thingsGoneThrough[type] then
+			--	thingsGoneThrough[type] = 1
+			--end
 		end
 	end
 	table.insert(parts, "}")
