@@ -1,5 +1,5 @@
 # THIS IS BASED ON https://github.com/robertoEpe/love-haxe-wrappergen.
-## Original License (BSD 2-Clause) (https://github.com/robertoEpe/love-haxe-wrappergen/blob/master/LICENSE)
+
 its just slightly edited to work on my machine, plus its now setup to straight out the box work by doing `love ./`.  
 (NOTE IF YOU DO THIS USING LOVE2D; there'll be a shit ton of command prompts that'll show up. dont be afraid.)  
 (its just for all the commands that need to run! i highly recommend installing a regular lua install though as its much quicker with that anyways.)  
@@ -20,3 +20,7 @@ This project uses the awesome [love-api][] project, which provides a lua tables 
 To use this project, make sure to checkout the submodule (`git submodule update --init love-api`).  
 
 [love-api]: https://github.com/love2d-community/love-api  
+
+# LEGAL MUMBO JUMBO  
+idk much abt legal stuff and licenses but by the sounds of https://github.com/robertoEpe/love-haxe-wrappergen/blob/master/LICENSE  
+(the license that the original version is under) it sounds like i should link it.
