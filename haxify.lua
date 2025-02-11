@@ -271,6 +271,16 @@ function emitMethod(typeName, m, types, multirets)
 	return rawEmitFunction(typeName, m, types, false, multirets)
 end
 
+function tableHasValue(_table, value)
+	for i=1, #_table do
+		local tblVal = _table[i]
+		if tblVal == value then
+			return true
+		end
+	end
+	return false
+end
+
 function emitEnum(e, packageName)
 	local out = {}
 	table.insert(out, ("package %s;"):format(packageName))
@@ -280,8 +290,48 @@ function emitEnum(e, packageName)
 	for i, v in ipairs(e.constants) do
 		local nname = v.name
 		local nnamefirst = string.sub(nname, 1, 1)
+		local invalidNames = {
+			["!"] = "exclamationmark",
+			["\""] = "doublequote",
+			["#"] = "hash",
+			["$"] = "dollar",
+			["&"] = "ampersand",
+			["'"] = "singlequote",
+			["("] = "leftparenthesis",
+			[")"] = "rightparenthesis",
+			["*"] = "asterisk",
+			["+"] = "plus",
+			[","] = "comma",
+			["-"] = "hyphen",
+			["."] = "period",
+			["/"] = "slash",
+			[":"] = "colon",
+			[";"] = "semicolon",
+			["<"] = "lessthan",
+			["="] = "equals",
+			[">"] = "greaterthan",
+			["?"] = "questionmark",
+			["@"] = "at",
+			["["] = "leftbracket",
+			["\\"] = "backslash",
+			["]"] = "rightbracket",
+			["^"] = "caret",
+			["_"] = "underscore",
+			["`"] = "backtick"
+		}
+		
 		if tonumber(nnamefirst) ~= nil then
 			nname = "_" .. nname 
+		end
+
+		if invalidNames[nnamefirst] then
+			nname = invalidNames[nnamefirst]
+		end
+		if v.name == "\"" then
+			v.name = "\\\""
+		end
+		if v.name == "\\" then
+			v.name = "\\\\"
 		end
 		table.insert(out, ("\tvar %s = \"%s\";"):format(capitalize(nname), v.name))
 	end
