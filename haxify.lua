@@ -291,47 +291,53 @@ function emitEnum(e, packageName)
 		local nname = v.name
 		local nnamefirst = string.sub(nname, 1, 1)
 		local invalidNames = {
-			["!"] = "exclamationmark",
-			["\""] = "doublequote",
-			["#"] = "hash",
-			["$"] = "dollar",
-			["&"] = "ampersand",
-			["'"] = "singlequote",
-			["("] = "leftparenthesis",
-			[")"] = "rightparenthesis",
-			["*"] = "asterisk",
-			["+"] = "plus",
-			[","] = "comma",
-			["-"] = "hyphen",
-			["."] = "period",
-			["/"] = "slash",
-			[":"] = "colon",
-			[";"] = "semicolon",
-			["<"] = "lessthan",
-			["="] = "equals",
-			[">"] = "greaterthan",
-			["?"] = "questionmark",
-			["@"] = "at",
-			["["] = "leftbracket",
-			["\\"] = "backslash",
-			["]"] = "rightbracket",
-			["^"] = "caret",
-			["_"] = "underscore",
-			["`"] = "backtick"
+			["%!"] = "exclamationmark",
+			["%\""] = "doublequote",
+			["%#"] = "hash",
+			["%$"] = "dollar",
+			["%&"] = "ampersand",
+			["%'"] = "singlequote",
+			["%("] = "leftparenthesis",
+			["%)"] = "rightparenthesis",
+			["%*"] = "asterisk",
+			["%+"] = "plus",
+			["%,"] = "comma",
+			["%-"] = "hyphen",
+			["%."] = "period",
+			["%/"] = "slash",
+			["%:"] = "colon",
+			["%;"] = "semicolon",
+			["%<"] = "lessthan",
+			["%="] = "equals",
+			["%>"] = "greaterthan",
+			["%?"] = "questionmark",
+			["%@"] = "at",
+			["%["] = "leftbracket",
+			["%\\"] = "backslash",
+			["%]"] = "rightbracket",
+			["%^"] = "caret",
+			["%_"] = "underscore",
+			["%`"] = "backtick"
 		}
 		
 		if tonumber(nnamefirst) ~= nil then
 			nname = "_" .. nname 
 		end
-
-		if invalidNames[nnamefirst] then
-			nname = invalidNames[nnamefirst]
+		--nnamefirst = "%" .. nnamefirst
+		if invalidNames["%" .. nnamefirst] then
+			nname = nname:gsub('%' .. nnamefirst, invalidNames['%' .. nnamefirst])
 		end
 		if v.name == "\"" then
 			v.name = "\\\""
 		end
 		if v.name == "\\" then
 			v.name = "\\\\"
+		end
+		if #nname > 1 then
+			local nnamelast = string.sub(nname, #nname, #nname)
+			if invalidNames["%" .. nnamelast] then
+				nname = nname:gsub('%' .. nnamelast, "_" .. invalidNames['%' .. nnamelast])
+			end
 		end
 		table.insert(out, ("\tvar %s = \"%s\";"):format(capitalize(nname), v.name))
 	end
